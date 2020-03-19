@@ -1,14 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import {
-  Box,
-  Heading,
-  Flex,
-  Text,
-  Button,
-  Stack,
-  ButtonGroup
-} from "@chakra-ui/core";
+import { Box, Heading, Flex, Text, Button, ButtonGroup } from "@chakra-ui/core";
 
 const MenuItems = ({ children, to }) => (
   <Link to={to}>
