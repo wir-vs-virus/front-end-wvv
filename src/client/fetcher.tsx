@@ -27,19 +27,19 @@ export interface UserPrincipal {
   attributes?: {
   [key: string]: {[key: string]: any};
 };
+  name?: string;
+  enabled?: boolean;
+  username?: string;
   accountNonExpired?: boolean;
   accountNonLocked?: boolean;
   credentialsNonExpired?: boolean;
-  username?: string;
-  enabled?: boolean;
-  name?: string;
 }
 
 export interface User {
   id?: number;
   name?: string;
   email?: string;
-  provider: "FACEBOOK" | "GOOGLE" | "LOCAL";
+  provider: "facebook" | "google" | "local";
   providerId?: string;
 }
 
@@ -71,6 +71,20 @@ export const RegisterUser = (props: RegisterUserProps) => (
 export type UseRegisterUserProps = Omit<UseMutateProps<void, void, SignUpRequest>, "path" | "verb">;
 
 export const useRegisterUser = (props: UseRegisterUserProps) => useMutate<void, unknown, void, SignUpRequest>("POST", `/auth/signup`, props);
+
+
+export type GetHomeContentProps = Omit<GetProps<void, unknown, void>, "path">;
+
+export const GetHomeContent = (props: GetHomeContentProps) => (
+  <Get<void, unknown, void>
+    path={`/`}
+    {...props}
+  />
+);
+
+export type UseGetHomeContentProps = Omit<UseGetProps<void, void>, "path">;
+
+export const useGetHomeContent = (props: UseGetHomeContentProps) => useGet<void, unknown, void>(`/`, props);
 
 
 export interface GetCurrentUserQueryParams {
