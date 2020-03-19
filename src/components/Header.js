@@ -39,7 +39,7 @@ const Header = (props) => {
         </Heading>
       </Flex>
 
-      <Box display={{ sm: "block", md: "none" }} onClick={handleToggle}>
+      <Box display={{ base: "block", md: "none" }} onClick={handleToggle}>
         <svg
           fill="white"
           width="12px"
@@ -52,8 +52,8 @@ const Header = (props) => {
       </Box>
 
       <Box
-        display={{ sm: show ? "block" : "none", md: "flex" }}
-        width={{ sm: "full", md: "auto" }}
+        display={{ base: show ? "block" : "none", md: "flex" }}
+        width={{ base: "full", md: "auto" }}
         alignItems="center"
         flexGrow={1}
       >
@@ -62,7 +62,7 @@ const Header = (props) => {
       </Box>
 
       <ButtonGroup
-        display={{ sm: show ? "block" : "none", md: "block" }}
+        display={{ base: show ? "block" : "none", md: "block" }}
         mt={{ base: 10, md: 0 }}
       >
         <Button bg="transparent" border="1px">
