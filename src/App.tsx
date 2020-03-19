@@ -1,5 +1,11 @@
-import React from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import React, { ReactChild } from "react";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+  RouteProps
+} from "react-router-dom";
 
 // Styling
 import { ThemeProvider } from "@chakra-ui/core";
@@ -18,13 +24,7 @@ function App() {
       <Router>
         <Header />
         <main>
-          {/* A <Switch> looks through its children <Route>s and
-        renders the first one that matches the current URL. */}
-          <Switch>
-            <Route path="/">
-              <Home />
-            </Route>
-          </Switch>
+          <Routes />
         </main>
       </Router>
     </ThemeProvider>
@@ -32,3 +32,36 @@ function App() {
 }
 
 export default App;
+
+const Routes = () => {
+  return (
+    <Switch>
+      <Route path="/">
+        <Home />
+      </Route>
+      <PrivateRoute path="/privat-home">
+        <Home />
+      </PrivateRoute>
+    </Switch>
+  );
+};
+
+function PrivateRoute({ children, ...rest }: RouteProps) {
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        true ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/",
+              state: { from: location }
+            }}
+          />
+        )
+      }
+    />
+  );
+}
