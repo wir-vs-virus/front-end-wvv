@@ -1,4 +1,4 @@
-import React from "react";
+import React, { ReactEventHandler } from "react";
 import { Link } from "react-router-dom";
 import { Box, Heading, Flex, Text, Button, ButtonGroup } from "@chakra-ui/core";
 import {
@@ -15,7 +15,7 @@ import {
   useDisclosure
 } from "@chakra-ui/core";
 
-const MenuItems = ({ children, to }) => (
+const MenuItems = ({ children, to }: { children: string; to: string }) => (
   <Link to={to}>
     <Text mt={{ base: 4, md: 0 }} mr={6} display="block">
       {children}
@@ -23,7 +23,7 @@ const MenuItems = ({ children, to }) => (
   </Link>
 );
 
-const Header = (props) => {
+const Header = () => {
   // Menu
   const [showMenu, setMenu] = React.useState(false);
   const handleMenu = () => setMenu(!showMenu);
@@ -47,7 +47,6 @@ const Header = (props) => {
       padding="1.5rem"
       bg="gray.600"
       color="white"
-      {...props}
     >
       <Flex align="center" mr={5}>
         <Heading as="h1" size="lg">
@@ -115,8 +114,14 @@ const Header = (props) => {
 
 export default Header;
 
-const FormModal = ({ isOpen, onClose, isSignup }) => {
-  const initialRef = React.useRef();
+interface iFormModal {
+  isOpen: boolean;
+  onClose: ReactEventHandler;
+  isSignup: boolean;
+}
+
+const FormModal = ({ isOpen, onClose, isSignup }: iFormModal) => {
+  const initialRef = React.useRef(null);
 
   let passwordRepeatInValid = false;
 
@@ -147,7 +152,9 @@ const FormModal = ({ isOpen, onClose, isSignup }) => {
               placeholder="E-Mail"
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e: React.FormEvent<HTMLInputElement>): void =>
+                setEmail(e.currentTarget.value)
+              }
             />
           </FormControl>
 
@@ -157,7 +164,9 @@ const FormModal = ({ isOpen, onClose, isSignup }) => {
               placeholder="Password"
               type="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e: React.FormEvent<HTMLInputElement>): void =>
+                setPassword(e.currentTarget.value)
+              }
             />
           </FormControl>
           {isSignup && (
@@ -169,7 +178,9 @@ const FormModal = ({ isOpen, onClose, isSignup }) => {
                 value={password2}
                 isInvalid={passwordRepeatInValid}
                 errorBorderColor="red.300"
-                onChange={(e) => setPassword2(e.target.value)}
+                onChange={(e: React.FormEvent<HTMLInputElement>): void =>
+                  setPassword2(e.currentTarget.value)
+                }
               />
             </FormControl>
           )}
