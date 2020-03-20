@@ -5,10 +5,6 @@ import { Spinner, Box, Heading } from "@chakra-ui/core";
 import { Row } from "../components/Elements";
 import { useGetCurrentUser, User } from "../client/fetcher";
 
-const isUser = (user: User | null | void): user is User => {
-  return (user as User).id !== undefined;
-};
-
 const Profile = () => {
   let { data, loading, error } = useGetCurrentUser({});
 
@@ -25,7 +21,7 @@ const Profile = () => {
       )}
       {data && isUser(data) && (
         <Box>
-          <Heading>{data.name}</Heading>
+          <Heading>{data?.name}</Heading>
         </Box>
       )}
     </Row>
