@@ -29,7 +29,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "generate-fetcher": "restful-react import --file ./src/client/spec.api.json --output ./src/client/fetcher.tsx"
+    "generate-fetcher": "restful-react import --validation --file ./src/client/spec.api.json --output ./src/client/fetcher.tsx"
   },
   "eslintConfig": {
     "extends": "react-app"
