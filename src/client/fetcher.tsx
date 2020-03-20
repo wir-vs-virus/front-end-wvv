@@ -23,7 +23,9 @@ export interface GrantedAuthority {
 export interface UserPrincipal {
   id?: number;
   password?: string;
-  authorities?: GrantedAuthority[];
+  authorities?: {
+  authority?: string;
+}[];
   attributes?: {
   [key: string]: {[key: string]: any};
 };
@@ -43,34 +45,45 @@ export interface User {
   providerId?: string;
 }
 
-export type AuthenticateUserProps = Omit<MutateProps<void, unknown, void, LoginRequest>, "path" | "verb">;
+export interface AuthenticateUserRequestBody {
+  email: string;
+  password: string;
+}
+
+export type AuthenticateUserProps = Omit<MutateProps<void, unknown, void, AuthenticateUserRequestBody>, "path" | "verb">;
 
 export const AuthenticateUser = (props: AuthenticateUserProps) => (
-  <Mutate<void, unknown, void, LoginRequest>
+  <Mutate<void, unknown, void, AuthenticateUserRequestBody>
     verb="POST"
     path={`/auth/login`}
     {...props}
   />
 );
 
-export type UseAuthenticateUserProps = Omit<UseMutateProps<void, void, LoginRequest>, "path" | "verb">;
+export type UseAuthenticateUserProps = Omit<UseMutateProps<void, void, AuthenticateUserRequestBody>, "path" | "verb">;
 
-export const useAuthenticateUser = (props: UseAuthenticateUserProps) => useMutate<void, unknown, void, LoginRequest>("POST", `/auth/login`, props);
+export const useAuthenticateUser = (props: UseAuthenticateUserProps) => useMutate<void, unknown, void, AuthenticateUserRequestBody>("POST", `/auth/login`, props);
 
 
-export type RegisterUserProps = Omit<MutateProps<void, unknown, void, SignUpRequest>, "path" | "verb">;
+export interface RegisterUserRequestBody {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export type RegisterUserProps = Omit<MutateProps<void, unknown, void, RegisterUserRequestBody>, "path" | "verb">;
 
 export const RegisterUser = (props: RegisterUserProps) => (
-  <Mutate<void, unknown, void, SignUpRequest>
+  <Mutate<void, unknown, void, RegisterUserRequestBody>
     verb="POST"
     path={`/auth/signup`}
     {...props}
   />
 );
 
-export type UseRegisterUserProps = Omit<UseMutateProps<void, void, SignUpRequest>, "path" | "verb">;
+export type UseRegisterUserProps = Omit<UseMutateProps<void, void, RegisterUserRequestBody>, "path" | "verb">;
 
-export const useRegisterUser = (props: UseRegisterUserProps) => useMutate<void, unknown, void, SignUpRequest>("POST", `/auth/signup`, props);
+export const useRegisterUser = (props: UseRegisterUserProps) => useMutate<void, unknown, void, RegisterUserRequestBody>("POST", `/auth/signup`, props);
 
 
 export type GetHomeContentProps = Omit<GetProps<void, unknown, void>, "path">;
@@ -88,7 +101,22 @@ export const useGetHomeContent = (props: UseGetHomeContentProps) => useGet<void,
 
 
 export interface GetCurrentUserQueryParams {
-  userPrincipal: UserPrincipal;
+  userPrincipal: {
+  id?: number;
+  password?: string;
+  authorities?: {
+  authority?: string;
+}[];
+  attributes?: {
+  [key: string]: {[key: string]: any};
+};
+  name?: string;
+  enabled?: boolean;
+  username?: string;
+  accountNonExpired?: boolean;
+  accountNonLocked?: boolean;
+  credentialsNonExpired?: boolean;
+};
 }
 
 export type GetCurrentUserProps = Omit<GetProps<void, unknown, GetCurrentUserQueryParams>, "path">;
