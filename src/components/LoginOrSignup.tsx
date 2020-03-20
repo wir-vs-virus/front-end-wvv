@@ -26,8 +26,6 @@ export const LoginOrSignUp = ({ isSignUp }: { isSignUp: boolean }) => {
   }
 
   const Auth = React.useContext(AuthContext);
-  const setToken = ({ accessToken }: { accessToken: string }) =>
-    Auth?.setKey(accessToken);
   const { mutate: login } = useAuthenticateUser({});
   const { mutate: signup } = useRegisterUser({});
 
@@ -39,11 +37,11 @@ export const LoginOrSignUp = ({ isSignUp }: { isSignUp: boolean }) => {
         await signup({ name, email, password });
         const _: unknown = await login({ email, password });
         const { accessToken } = _ as LoginSuccess;
-        setToken({ accessToken });
+        Auth?.setKey(accessToken);
       } else {
         const _: unknown = await login({ email, password });
-        const resp = _ as LoginSuccess;
-        setToken(resp);
+        const { accessToken } = _ as LoginSuccess;
+        Auth?.setKey(accessToken);
       }
     } catch (_) {
       const error = _ as LoginError;
