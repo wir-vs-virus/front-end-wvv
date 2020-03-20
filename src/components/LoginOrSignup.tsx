@@ -1,18 +1,19 @@
 import * as React from "react";
 
 import { Redirect } from "react-router-dom";
-import { FormControl, FormLabel, Input, Button } from "@chakra-ui/core";
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  useToast
+} from "@chakra-ui/core";
 
 import { AuthContext } from "../context/Auth";
 import { useAuthenticateUser, useRegisterUser } from "../client/fetcher";
 
-type LoginOrSignUpProps = {
-  isSignUp: boolean;
-  initialRef?: React.RefObject<HTMLInputElement> | undefined;
-};
-
-export const LoginOrSignUp = (props: LoginOrSignUpProps) => {
-  const { isSignUp, initialRef } = props;
+export const LoginOrSignUp = ({ isSignUp }: { isSignUp: boolean }) => {
+  const toast = useToast();
 
   const [name, setName] = React.useState("");
   const [email, setEmail] = React.useState("");
@@ -32,92 +33,116 @@ export const LoginOrSignUp = (props: LoginOrSignUpProps) => {
 
   if (Auth?.isLoggedIn) return <Redirect to="/profile" />;
 
+  const signUpLoginClickHandle = async () => {
+    try {
+      if (isSignUp) {
+        await signup({ name, email, password });
+        const _: unknown = await login({ email, password });
+        const { accessToken } = _ as LoginSuccess;
+        setToken({ accessToken });
+      } else {
+        const _: unknown = await login({ email, password });
+        const resp = _ as LoginSuccess;
+        setToken(resp);
+      }
+    } catch (_) {
+      const error = _ as LoginError;
+      toast({
+        title: isSignUp ? "Sign up Error" : "Login Error",
+        description: error.message,
+        status: "error",
+        duration: 9000,
+        isClosable: true
+      });
+    }
+  };
+
   return (
     <>
       {isSignUp && (
-        <FormControl>
-          <FormLabel>Name</FormLabel>
-          <Input
-            ref={initialRef}
-            placeholder="Name"
-            type="text"
-            value={name}
-            onChange={(e: React.FormEvent<HTMLInputElement>): void =>
-              setName(e.currentTarget.value)
-            }
-          />
-        </FormControl>
+        <InputWrap
+          displayName="Name"
+          type="text"
+          value={name}
+          setValue={setName}
+        />
       )}
-      <FormControl mt={4}>
-        <FormLabel>E-Mail</FormLabel>
-        <Input
-          placeholder="E-Mail"
-          type="email"
-          value={email}
-          onChange={(e: React.FormEvent<HTMLInputElement>): void =>
-            setEmail(e.currentTarget.value)
-          }
-        />
-      </FormControl>
+      <InputWrap
+        displayName="E-Mail"
+        type="email"
+        value={email}
+        setValue={setEmail}
+      />
+      <InputWrap
+        displayName="Password"
+        type="password"
+        value={password}
+        setValue={setPassword}
+      />
 
-      <FormControl mt={4}>
-        <FormLabel>Password</FormLabel>
-        <Input
-          placeholder="Password"
-          type="password"
-          value={password}
-          onChange={(e: React.FormEvent<HTMLInputElement>): void =>
-            setPassword(e.currentTarget.value)
-          }
-        />
-      </FormControl>
       {isSignUp && (
-        <FormControl mt={4}>
-          <FormLabel>Repeat Password</FormLabel>
-          <Input
-            placeholder="Password"
-            type="password"
-            value={password2}
-            isInvalid={passwordRepeatInValid}
-            errorBorderColor="red.300"
-            onChange={(e: React.FormEvent<HTMLInputElement>): void =>
-              setPassword2(e.currentTarget.value)
-            }
-          />
-        </FormControl>
+        <InputWrap
+          displayName="Password"
+          type="password"
+          value={password2}
+          isInvalid={passwordRepeatInValid}
+          setValue={setPassword2}
+        />
       )}
 
-      <Button
-        my="8"
-        onClick={() => {
-          if (isSignUp) {
-            const resp = signup({ name, email, password });
-
-            //@ts-ignore
-            resp.then(({ success }) => {
-              if (success) {
-                login({ email, password })
-                  //@ts-ignore
-                  .then(setToken);
-              }
-            });
-          } else {
-            const resp = login({ email, password });
-            // TODO: Why does login return void?
-            resp
-              .then((data) => {
-                console.log(data);
-
-                return data;
-              })
-              //@ts-ignore
-              .then(setToken)
-              .catch(console.error);
-          }
-        }}
-      >
+      <Button my="8" onClick={signUpLoginClickHandle}>
         Send
       </Button>
     </>
+  );
+};
+
+type FieldErrors = {
+  field: string;
+  defaultMessage: string;
+};
+
+type LoginError = {
+  data: {
+    errors?: [FieldErrors];
+  };
+  message: string;
+  status: number;
+};
+
+type LoginSuccess = {
+  accessToken: string;
+  tokenType: "Bearer";
+};
+
+type InputWrapProps = {
+  displayName: string;
+  type: "text" | "email" | "password";
+  value: string;
+  isInvalid?: boolean;
+  setValue: React.Dispatch<React.SetStateAction<string>>;
+};
+
+const InputWrap = ({
+  displayName,
+  type,
+  value,
+  setValue,
+  isInvalid
+}: InputWrapProps) => {
+  return (
+    <FormControl mt={4}>
+      <FormLabel>{displayName}</FormLabel>
+      <Input
+        placeholder={displayName}
+        type={type}
+        value={value}
+        isInvalid={isInvalid}
+        errorBorderColor="red.300"
+        onChange={(e: React.FormEvent<HTMLInputElement>): void =>
+          setValue(e.currentTarget.value)
+        }
+      />
+    </FormControl>
   );
 };
