@@ -63,7 +63,7 @@ const Header = () => {
         flexGrow={1}
       >
         <MenuItems to="/">Home</MenuItems>
-        <MenuItems to="/privat">Privat</MenuItems>
+        {Auth?.isLoggedIn && <MenuItems to="/privat">Privat</MenuItems>}
       </Box>
 
       <ButtonGroup
