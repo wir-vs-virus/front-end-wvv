@@ -6,7 +6,7 @@ import { Row } from "../components/Elements";
 import { useGetCurrentUser } from "../client/fetcher";
 
 const Profile = () => {
-  let { data, loading, error } = useGetCurrentUser({});
+  let { data, loading } = useGetCurrentUser({});
 
   return (
     <Row>

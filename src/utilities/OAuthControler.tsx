@@ -1,12 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { AuthContext } from "../context/Auth";
-import {
-  useParams,
-  useRouteMatch,
-  RouteComponentProps,
-  Redirect,
-  useLocation
-} from "react-router-dom";
+import { Redirect, useLocation } from "react-router-dom";
 
 interface RouteMatch {
   provider: "google" | "facebook";
@@ -18,7 +12,7 @@ const OAuthController = () => {
   const location = useLocation();
 
   const getUrlParameter = (name: string) => {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    name = name.replace(/[[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
     var results = regex.exec(location.search);
     return results === null
@@ -31,7 +25,7 @@ const OAuthController = () => {
 
   useEffect(() => {
     if (token) Auth?.setKey(token);
-  }, []);
+  }, [Auth, token]);
 
   if (token) {
     return (
@@ -55,8 +49,6 @@ const OAuthController = () => {
       />
     );
   }
-
-  return null;
 };
 
 export default OAuthController;
