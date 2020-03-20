@@ -1,4 +1,4 @@
 module.exports = {
   appName: "Wir-vs-Virus",
-  backendHost: "http://localhost:4000"
+  backendHost: "http://localhost:50123"
 };
