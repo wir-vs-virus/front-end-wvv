@@ -1,4 +1,4 @@
-import React, { ReactChild } from "react";
+import React, { useContext } from "react";
 import {
   BrowserRouter as Router,
   Switch,
@@ -7,56 +7,78 @@ import {
   RouteProps
 } from "react-router-dom";
 
+import { backendHost } from "./config";
+
+import { RestfulProvider } from "restful-react";
+
 // Styling
 import { ThemeProvider } from "@chakra-ui/core";
 import { theme } from "./utilities/styling";
 import "./base.css";
+
+//Contexts
+import { AuthContext } from "./context/Auth";
 
 // Components
 import Header from "./components/Header";
 
 // Views
 import Home from "./views/Home";
+import Login from "./views/Login";
 
 function App() {
+  const Auth = useContext(AuthContext);
   return (
     <ThemeProvider theme={theme}>
-      <Router>
-        <Header />
-        <main>
-          <Routes />
-        </main>
-      </Router>
+      <RestfulProvider
+        base={backendHost}
+        requestOptions={() => ({
+          headers: { Authorization: "Bearer " + Auth?.key }
+        })}
+      >
+        <Router>
+          <Header />
+          <main>
+            <Routes />
+          </main>
+        </Router>
+      </RestfulProvider>
     </ThemeProvider>
   );
 }
 
 export default App;
 
+const Privat = () => <div>Privat</div>;
+
 const Routes = () => {
   return (
     <Switch>
-      <Route path="/">
+      <Route exact path="/">
         <Home />
       </Route>
-      <PrivateRoute path="/privat-home">
-        <Home />
-      </PrivateRoute>
+      <Route exact path="/login">
+        <Login />
+      </Route>
+      <ProtectedRoutes path="/privat">
+        <Privat />
+      </ProtectedRoutes>
     </Switch>
   );
 };
 
-function PrivateRoute({ children, ...rest }: RouteProps) {
+const ProtectedRoutes = ({ children, ...rest }: RouteProps) => {
+  const auth = React.useContext(AuthContext);
   return (
     <Route
       {...rest}
       render={({ location }) =>
-        true ? (
+        auth?.isLoggedIn ? (
           children
         ) : (
           <Redirect
             to={{
-              pathname: "/",
+              pathname: "/login",
               state: { from: location }
             }}
           />
@@ -64,4 +86,4 @@ function PrivateRoute({ children, ...rest }: RouteProps) {
       }
     />
   );
-}
+};
