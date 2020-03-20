@@ -12,6 +12,8 @@ import {
 import { AuthContext } from "../context/Auth";
 import { useAuthenticateUser, useRegisterUser } from "../client/fetcher";
 
+import { backendHost } from "../config";
+
 export const LoginOrSignUp = ({ isSignUp }: { isSignUp: boolean }) => {
   const toast = useToast();
 
@@ -91,6 +93,7 @@ export const LoginOrSignUp = ({ isSignUp }: { isSignUp: boolean }) => {
       <Button my="8" onClick={signUpLoginClickHandle}>
         Send
       </Button>
+      <SocialSignup />
     </>
   );
 };
@@ -142,5 +145,15 @@ const InputWrap = ({
         }
       />
     </FormControl>
+  );
+};
+
+const SocialSignup = () => {
+  return (
+    <a
+      href={`${backendHost}/oauth2/authorize/google?redirect_uri=${window.location.host}/profile`}
+    >
+      Google
+    </a>
   );
 };
