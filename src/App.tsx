@@ -25,6 +25,7 @@ import Header from "./components/Header";
 // Views
 import Home from "./views/Home";
 import Login from "./views/Login";
+import Profile from "./views/Profile";
 
 function App() {
   const Auth = useContext(AuthContext);
@@ -49,8 +50,6 @@ function App() {
 
 export default App;
 
-const Privat = () => <div>Privat</div>;
-
 const Routes = () => {
   return (
     <Switch>
@@ -60,8 +59,8 @@ const Routes = () => {
       <Route exact path="/login">
         <Login />
       </Route>
-      <ProtectedRoutes path="/privat">
-        <Privat />
+      <ProtectedRoutes path="/profile">
+        <Profile />
       </ProtectedRoutes>
     </Switch>
   );
