@@ -3,7 +3,7 @@ import React from "react";
 
 import { Spinner, Box, Heading } from "@chakra-ui/core";
 import { Row } from "../components/Elements";
-import { useGetCurrentUser, User } from "../client/fetcher";
+import { useGetCurrentUser } from "../client/fetcher";
 
 const Profile = () => {
   let { data, loading, error } = useGetCurrentUser({});
@@ -19,7 +19,7 @@ const Profile = () => {
           size="xl"
         />
       )}
-      {data && isUser(data) && (
+      {data && (
         <Box>
           <Heading>{data?.name}</Heading>
         </Box>
