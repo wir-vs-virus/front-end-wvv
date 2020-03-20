@@ -73,126 +73,35 @@ const Header = () => {
         flexGrow={1}
       >
         <MenuItems to="/">Home</MenuItems>
-        <MenuItems to="/profile">Profile</MenuItems>
+        <MenuItems to="/privat">Privat</MenuItems>
       </Box>
 
       <ButtonGroup
         display={{ base: showMenu ? "block" : "none", md: "block" }}
         mt={{ base: 10, md: 0 }}
       >
-        <Button
-          bg="transparent"
-          border="1px"
-          onClick={() => {
-            setSignup(true);
-            formOnOpen();
-          }}
-        >
-          Create account
-        </Button>
-        <Button
-          bg="transparent"
-          border="1px"
-          onClick={() => {
-            setSignup(false);
-            formOnOpen();
-          }}
-        >
-          Login
-        </Button>
+        {Auth?.isLoggedIn ? (
+          //@ts-ignore
+          <Link
+            onClick={() => {
+              Auth?.logout();
+            }}
+          >
+            <Button bg="transparent" border="1px">
+              Logout
+            </Button>
+          </Link>
+        ) : (
+          //@ts-ignore
+          <Link as={RouterLink} to="/login">
+            <Button bg="transparent" border="1px">
+              Signup / Login
+            </Button>
+          </Link>
+        )}
       </ButtonGroup>
-
-      {/* Modal */}
-      <FormModal
-        isOpen={formIsOpen}
-        onClose={formOnClose}
-        isSignup={isSignup}
-      />
     </Flex>
   );
 };
 
 export default Header;
-
-interface iFormModal {
-  isOpen: boolean;
-  onClose: ReactEventHandler;
-  isSignup: boolean;
-}
-
-const FormModal = ({ isOpen, onClose, isSignup }: iFormModal) => {
-  const initialRef = React.useRef(null);
-
-  let passwordRepeatInValid = false;
-
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const [password2, setPassword2] = React.useState("");
-
-  if (isSignup) {
-    passwordRepeatInValid = password !== password2;
-  }
-
-  return (
-    <Modal
-      initialFocusRef={initialRef}
-      isOpen={isOpen}
-      onClose={onClose}
-      isCentered
-    >
-      <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>{isSignup ? "Create your account" : "Login"}</ModalHeader>
-        <ModalCloseButton />
-        <ModalBody pb={6}>
-          <FormControl>
-            <FormLabel>E-Mail</FormLabel>
-            <Input
-              ref={initialRef}
-              placeholder="E-Mail"
-              type="email"
-              value={email}
-              onChange={(e: React.FormEvent<HTMLInputElement>): void =>
-                setEmail(e.currentTarget.value)
-              }
-            />
-          </FormControl>
-
-          <FormControl mt={4}>
-            <FormLabel>Password</FormLabel>
-            <Input
-              placeholder="Password"
-              type="password"
-              value={password}
-              onChange={(e: React.FormEvent<HTMLInputElement>): void =>
-                setPassword(e.currentTarget.value)
-              }
-            />
-          </FormControl>
-          {isSignup && (
-            <FormControl mt={4}>
-              <FormLabel>Repeat Password</FormLabel>
-              <Input
-                placeholder="Password"
-                type="password"
-                value={password2}
-                isInvalid={passwordRepeatInValid}
-                errorBorderColor="red.300"
-                onChange={(e: React.FormEvent<HTMLInputElement>): void =>
-                  setPassword2(e.currentTarget.value)
-                }
-              />
-            </FormControl>
-          )}
-        </ModalBody>
-
-        <ModalFooter>
-          <Button variantColor="blue" mr={3}>
-            Send
-          </Button>
-          <Button onClick={onClose}>Cancel</Button>
-        </ModalFooter>
-      </ModalContent>
-    </Modal>
-  );
-};
