@@ -30,7 +30,7 @@ export const LoginOrSignUp = (props: LoginOrSignUpProps) => {
   const { mutate: login } = useAuthenticateUser({});
   const { mutate: signup } = useRegisterUser({});
 
-  if (Auth?.isLoggedIn) return <Redirect to="/profile/me" />;
+  if (Auth?.isLoggedIn) return <Redirect to="/profile" />;
 
   return (
     <>
@@ -96,15 +96,23 @@ export const LoginOrSignUp = (props: LoginOrSignUpProps) => {
             //@ts-ignore
             resp.then(({ success }) => {
               if (success) {
-                //@ts-ignore
-                login({ email, password }).then(setToken);
+                login({ email, password })
+                  //@ts-ignore
+                  .then(setToken);
               }
             });
           } else {
             const resp = login({ email, password });
             // TODO: Why does login return void?
-            //@ts-ignore
-            resp.then(setToken);
+            resp
+              .then((data) => {
+                console.log(data);
+
+                return data;
+              })
+              //@ts-ignore
+              .then(setToken)
+              .catch(console.error);
           }
         }}
       >
