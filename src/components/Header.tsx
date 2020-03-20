@@ -1,22 +1,20 @@
-import React, { ReactEventHandler } from "react";
-import { Link } from "react-router-dom";
-import { Box, Heading, Flex, Text, Button, ButtonGroup } from "@chakra-ui/core";
+import React, { useContext } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import {
-  Modal,
-  ModalBody,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalFooter,
-  FormControl,
-  FormLabel,
-  Input,
-  useDisclosure
+  Box,
+  Heading,
+  Flex,
+  Text,
+  Button,
+  ButtonGroup,
+  Link
 } from "@chakra-ui/core";
 
+import { AuthContext } from "../context/Auth";
+
 const MenuItems = ({ children, to }: { children: string; to: string }) => (
-  <Link to={to}>
+  //@ts-ignore
+  <Link as={RouterLink} to={to}>
     <Text mt={{ base: 4, md: 0 }} mr={6} display="block">
       {children}
     </Text>
@@ -28,15 +26,7 @@ const Header = () => {
   const [showMenu, setMenu] = React.useState(false);
   const handleMenu = () => setMenu(!showMenu);
 
-  // Modal Control
-  const {
-    isOpen: formIsOpen,
-    onOpen: formOnOpen,
-    onClose: formOnClose
-  } = useDisclosure();
-
-  // Signup or Login
-  const [isSignup, setSignup] = React.useState(false);
+  const Auth = useContext(AuthContext);
 
   return (
     <Flex
