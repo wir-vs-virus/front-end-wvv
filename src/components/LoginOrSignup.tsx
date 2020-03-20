@@ -151,7 +151,7 @@ const InputWrap = ({
 const SocialSignup = () => {
   return (
     <a
-      href={`${backendHost}/oauth2/authorize/google?redirect_uri=https://${window.location.host}/callback/test`}
+      href={`${backendHost}/oauth2/authorize/google?redirect_uri=https://front-end-wvv.now.sh/auth/google`}
     >
       Google
     </a>
