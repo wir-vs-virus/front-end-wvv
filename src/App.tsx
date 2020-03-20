@@ -27,6 +27,8 @@ import Home from "./views/Home";
 import Login from "./views/Login";
 import Profile from "./views/Profile";
 
+import OAuthController from "./utilities/OAuthControler";
+
 function App() {
   const Auth = useContext(AuthContext);
   return (
@@ -55,6 +57,9 @@ const Routes = () => {
     <Switch>
       <Route exact path="/">
         <Home />
+      </Route>
+      <Route path="/auth/:provider">
+        <OAuthController />
       </Route>
       <Route exact path="/login">
         <Login />
